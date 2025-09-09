@@ -6,6 +6,7 @@
     <title>Sistema de Buscas</title>
 </head>
 <body>
+    <a href="login.php">Login</a><br>
     <form name="pesquisa" action="executarbusca.php"
     method="post">
     <label>Digite a pesquisa</label><br>

@@ -48,8 +48,24 @@
             
             $salasEncontradas = $selectSalas->fetchAll(PDO::FETCH_ASSOC);
             echo "<p>=====>  Listagem</p>";
-            echo var_dump($salasEncontradas);
-
+            //echo var_dump($salasEncontradas);
+            foreach($salasEncontradas as $sala){
+                echo "<p>".$sala['descricao']. "-" .
+                 $sala['bloco']."</p>";
+                 //MOSTRAR OS MÓVEIS QUE ESTÃO NESTA SALA
+                 $sqlMoveisdaSala = "select M.descricao 
+                    from tbmovelsala MS, tbmoveis M
+                    where MS.idsala = ".$sala['id'] ."
+                    and MS.codigomovel = M.codigo";
+                    $selectMoveisdaSala = $conn->prepare($sqlMoveisdaSala);
+                    $selectMoveisdaSala->execute();
+                    $moveis = $selectMoveisdaSala->fetchAll(PDO::FETCH_ASSOC);
+                    echo "<ul>";
+                    foreach($moveis as $dado){
+                        echo "<li>". $dado['descricao']."</li>";
+                    }
+                    echo "</ul>";
+            }
             //móveis
             // Consulta para contar o total de registros --> Salas
             $sqlCountMoveis = "SELECT COUNT(*) as total FROM tbmoveis" . $condicaoBuscaMoveis;
@@ -62,7 +78,7 @@
             
             $stmtCountMoveis->execute();
             $totalRegistros = $stmtCountMoveis->fetch(PDO::FETCH_ASSOC)['total'];
-            echo "<p>=====>  Moveis encontradas:". $totalRegistros . "</p>";
+            echo "<p>=====>  Móveis encontradas:". $totalRegistros . "</p>";
             
             // Consulta para buscar os registros da página atual
             $sqlMoveis = "SELECT *
@@ -77,10 +93,12 @@
             
             $selectMoveis->execute();
             
-            $MoveisEncontradas = $selectMoveis->fetchAll(PDO::FETCH_ASSOC);
+            $MoveisEncontrados = $selectMoveis->fetchAll(PDO::FETCH_ASSOC);
             echo "<p>=====>  Listagem</p>";
-            echo var_dump($MoveisEncontradas);
-            
+            //echo var_dump($MoveisEncontrados);
+            foreach($MoveisEncontrados as $movel){
+                echo "<p>".$movel['descricao']."</p>";
+            }
         } catch(PDOException $e) {
             echo "<div class='alert alert-danger'>Erro: " . $e->getMessage() . "</div>";
         }
